@@ -1,29 +1,26 @@
-version: '3'
+version: '3.8'
 
 services:
+  mysqlserver:
+    image: mysql
+    container_name: mysqlserver
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysqlserver-db:/var/lib/mysql
+    networks:
+      - mynetwork
+
   tourplanservice:
     image: snahammed/tourplanimage
     container_name: tourplanservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://tourplanservicedb:3306/tourplanservice?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/tourplanservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8090
     ports:
       - "8090:8090"
-    networks:
-      - mynetwork
-    depends_on:
-      - tourplanservicedb
-
-  tourplanservicedb:
-    image: mysql
-    container_name: tourplanservicedb
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=tourplanservice
-      - MYSQL_USERNAME=root  # Added username section
-    volumes:
-      - tourplanservice-db:/var/lib/mysql
     networks:
       - mynetwork
 
@@ -31,25 +28,12 @@ services:
     image: snahammed/placeimage
     container_name: placeservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://placeservicedb:3306/placeservice?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/placeservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8070
     ports:
       - "8070:8070"
-    networks:
-      - mynetwork
-    depends_on:
-      - placeservicedb
-
-  placeservicedb:
-    image: mysql
-    container_name: placeservicedb
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=placeservice
-      - MYSQL_USERNAME=root  # Added username section
-    volumes:
-      - placeservice-db:/var/lib/mysql
     networks:
       - mynetwork
 
@@ -57,25 +41,12 @@ services:
     image: snahammed/userimage
     container_name: userservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://userservicedb:3306/userservice?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/userservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8099
     ports:
       - "8099:8099"
-    networks:
-      - mynetwork
-    depends_on:
-      - userservicedb
-
-  userservicedb:
-    image: mysql
-    container_name: userservicedb
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=userservice
-      - MYSQL_USERNAME=root  # Added username section
-    volumes:
-      - userservice-db:/var/lib/mysql
     networks:
       - mynetwork
 
@@ -83,25 +54,12 @@ services:
     image: snahammed/feedbackimage
     container_name: feedbackservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://feedbackservicedb:3306/feedbackservice?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/feedbackservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8060
     ports:
       - "8060:8060"
-    networks:
-      - mynetwork
-    depends_on:
-      - feedbackservicedb
-
-  feedbackservicedb:
-    image: mysql
-    container_name: feedbackservicedb
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=feedbackservice
-      - MYSQL_USERNAME=root  # Added username section
-    volumes:
-      - feedbackservice-db:/var/lib/mysql
     networks:
       - mynetwork
 
@@ -109,33 +67,22 @@ services:
     image: snahammed/adminimage
     container_name: adminservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://adminservicedb:3306/adminservice?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/adminservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - SERVER_PORT=8085
     ports:
       - "8085:8085"
-    networks:
-      - mynetwork
-    depends_on:
-      - adminservicedb
-
-  adminservicedb:
-    image: mysql
-    container_name: adminservicedb
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=adminservice
-      - MYSQL_USERNAME=root  # Added username section
-    volumes:
-      - adminservice-db:/var/lib/mysql
     networks:
       - mynetwork
 
   serverservice:
     image: snahammed/serverimage
     container_name: serverservice
+    environment:
+      - SERVER_PORT=8761
     ports:
-      - "8080:8080"
+      - "8761:8761"
     networks:
       - mynetwork
 
@@ -144,8 +91,4 @@ networks:
     driver: bridge
 
 volumes:
-  tourplanservice-db:
-  placeservice-db:
-  userservice-db:
-  feedbackservice-db:
-  adminservice-db:
+  mysqlserver-db:
