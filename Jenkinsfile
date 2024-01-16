@@ -8,6 +8,11 @@ pipeline {
                 // Checkout your source code from GitHub
                 git 'https://github.com/snahammed506/aitouristguide-backend.git'
 
+            }
+        }
+        
+stages {
+        stage('Deploy') {
                 // Build your Spring Boot application
 
                 withCredentials([usernamePassword(credentialsId: 'DockerRegistry', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
