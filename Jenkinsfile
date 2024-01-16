@@ -5,14 +5,15 @@ pipeline {
         stage('Build') {
             steps {
                 // Checkout your source code from GitHub
-                git 'https://github.com/snahammed506/aitouristguide-backend.git'
+               // git 'https://github.com/snahammed506/aitouristguide-backend.git'
+                sh 'git clone https://github.com/snahammed506/aitouristguide-backend.git && cd snahammed506'
             }
         }
 
         stage('Deploy') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DockerRegistry', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                // withCredentials([usernamePassword(credentialsId: 'DockerRegistry', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                //     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
 
                     // Feedback Service
                     dir('feedback-service') {
@@ -62,4 +63,4 @@ pipeline {
             }
         }
     }
-}
+// }
