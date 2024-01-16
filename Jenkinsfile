@@ -1,20 +1,16 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Install Maven') {
-            steps {
-                sh '''
-                    wget https://archive.apache.org/dist/maven/maven-3/3.2.5/binaries/apache-maven-3.2.5-bin.tar.gz
-                    tar -xf apache-maven-3.2.5-bin.tar.gz
-                    sudo mv apache-maven-3.2.5 /opt/
-                    echo "export MAVEN_HOME=/opt/apache-maven-3.2.5" >> ~/.bashrc
-                    echo "export PATH=\$MAVEN_HOME/bin:\$PATH" >> ~/.bashrc
-                    source ~/.bashrc
-                '''
-            }
-        }
+    environment {
+        M2_HOME = '/opt/apache-maven-3.2.5'
+        PATH = "${M2_HOME}/bin:${PATH}"
+    }
 
+    tools {
+        maven 'Maven-3.2.5'
+    }
+
+    stages {
         stage('Build') {
             steps {
                 sh 'rm -rf aitouristguide-backend'
