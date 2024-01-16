@@ -60,7 +60,7 @@ services:
     image: snahammed/tourplanimage
     container_name: tourplanservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://tourplanservice-mysql:3306/tourplanservicedb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://tourplanservice-mysql:3306/tourplanservicedb?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8090
