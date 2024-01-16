@@ -15,6 +15,7 @@ stages {
         stage('Deploy') {
                 // Build your Spring Boot application
 
+            steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerRegistry', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
 
@@ -63,6 +64,7 @@ stages {
                   // Launch all apps
                     sh 'docker-compose up -d'
                 }
+            }
             }
         }
     }
