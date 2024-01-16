@@ -1,70 +1,64 @@
 pipeline {
     agent any
 
-
     stages {
         stage('Build') {
             steps {
                 // Checkout your source code from GitHub
                 git 'https://github.com/snahammed506/aitouristguide-backend.git'
-
             }
         }
-        
-stages {
-        stage('Deploy') {
-                // Build your Spring Boot application
 
+        stage('Deploy') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DockerRegistry', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
 
                     // Feedback Service
-                    sh 'cd feedback-service'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build -t feedbackimage:latest .'
-                    sh 'docker push snahammed/feedbackimage:latest'
-                    sh 'cd ..'
+                    dir('feedback-service') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t feedbackimage:latest .'
+                        sh 'docker push snahammed/feedbackimage:latest'
+                    }
 
                     // Admin Service
-                    sh 'cd admin-service'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build -t adminimage:latest .'
-                    sh 'docker push snahammed/adminimage:latest'
-                    sh 'cd ..'
+                    dir('admin-service') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t adminimage:latest .'
+                        sh 'docker push snahammed/adminimage:latest'
+                    }
 
                     // Place Service
-                    sh 'cd place-service'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build -t placeimage:latest .'
-                    sh 'docker push snahammed/placeimage:latest'
-                    sh 'cd ..'
+                    dir('place-service') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t placeimage:latest .'
+                        sh 'docker push snahammed/placeimage:latest'
+                    }
 
                     // Server Registry
-                    sh 'cd server-registry'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build -t serverimage:latest .'
-                    sh 'docker push snahammed/serverimage:latest'
-                    sh 'cd ..'
+                    dir('server-registry') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t serverimage:latest .'
+                        sh 'docker push snahammed/serverimage:latest'
+                    }
 
                     // Tourplan Service
-                    sh 'cd tourplan-service'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build  -t tourplanimage:latest .'
-                    sh 'docker push snahammed/tourplanimage:latest'
-                    sh 'cd ..'
+                    dir('tourplan-service') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t tourplanimage:latest .'
+                        sh 'docker push snahammed/tourplanimage:latest'
+                    }
 
                     // User Service
-                    sh 'cd UserService'
-                    sh 'mvn clean install -DskipTests'
-                    sh 'docker build  -t userimage:latest .'
-                    sh 'docker push snahammed/userimage:latest'
-                    sh 'cd ..'
+                    dir('UserService') {
+                        sh 'mvn clean install -DskipTests'
+                        sh 'docker build -t userimage:latest .'
+                        sh 'docker push snahammed/userimage:latest'
+                    }
 
-                  // Launch all apps
+                    // Launch all apps
                     sh 'docker-compose up -d'
                 }
-            }
             }
         }
     }
