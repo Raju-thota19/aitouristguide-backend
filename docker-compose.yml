@@ -109,7 +109,7 @@ services:
       - mynetwork
 
   adminservice:
-    image: haneeshdevops/adminimage
+    image: snahammed/adminimage
     container_name: adminservice
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://adminservice-mysql:3306/adminservicedb?useSSL=false
