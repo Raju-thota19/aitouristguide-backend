@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Checkout your source code from GitHub
                // git 'https://github.com/snahammed506/aitouristguide-backend.git'
-                sh 'git clone https://github.com/snahammed506/aitouristguide-backend.git && cd aitouristguide-backend'
+                sh 'git clone https://github.com/snahammed506/aitouristguide-backend.git && cd aitouristguide-backend' || true
             }
         }
 
