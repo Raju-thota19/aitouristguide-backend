@@ -1,18 +1,58 @@
 version: '3.8'
 
 services:
-  mysqlserver:
+  tourplanservice-mysql:
     image: mysql
-    container_name: mysqlserver
+    container_name: tourplanservice-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=tourplanservicedb
+    volumes:
+      - tourplanservice-mysql-db:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  placeservice-mysql:
+    image: mysql
+    container_name: placeservice-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=placeservicedb
+    volumes:
+      - placeservice-mysql-db:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  userservice-mysql:
+    image: mysql
+    container_name: userservice-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userservicedb
+    volumes:
+      - userservice-mysql-db:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  feedbackservice-mysql:
+    image: mysql
+    container_name: feedbackservice-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=feedbackservicedb
+    volumes:
+      - feedbackservice-mysql-db:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  adminservice-mysql:
+    image: mysql
+    container_name: adminservice-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=adminservicedb
     volumes:
-      - mysqlserver-db:/var/lib/mysql
+      - adminservice-mysql-db:/var/lib/mysql
     networks:
       - mynetwork
 
@@ -20,7 +60,7 @@ services:
     image: snahammed/tourplanimage
     container_name: tourplanservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/tourplanservicedb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://tourplanservice-mysql:3306/tourplanservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8090
@@ -33,7 +73,7 @@ services:
     image: snahammed/placeimage
     container_name: placeservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/placeservicedb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://placeservice-mysql:3306/placeservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8070
@@ -46,7 +86,7 @@ services:
     image: snahammed/userimage
     container_name: userservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/userservicedb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://userservice-mysql:3306/userservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8099
@@ -59,8 +99,7 @@ services:
     image: snahammed/feedbackimage
     container_name: feedbackservice
     environment:
-    # - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/feedbackservicedb?useSSL=false
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/feedbackservicedb?useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://feedbackservice-mysql:3306/feedbackservicedb?useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8060
@@ -70,10 +109,10 @@ services:
       - mynetwork
 
   adminservice:
-    image: snahammed/adminimage
+    image: haneeshdevops/adminimage
     container_name: adminservice
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqlserver:3306/adminservicedb?useSSL=false
+      - SPRING_DATASOURCE_URL=jdbc:mysql://adminservice-mysql:3306/adminservicedb?useSSL=false
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SERVER_PORT=8085
@@ -97,4 +136,8 @@ networks:
     driver: bridge
 
 volumes:
-  mysqlserver-db:
+  tourplanservice-mysql-db:
+  placeservice-mysql-db:
+  userservice-mysql-db:
+  feedbackservice-mysql-db:
+  adminservice-mysql-db:
