@@ -33,7 +33,7 @@ pipeline {
                     def services = ['feedback-service', 'admin-service', 'place-service', 'server-registery', 'tourplan-service', 'UserService']
 
                     // Docker login
-                    sh 'docker login -u snahammed -p Noor@9676'
+                    sh 'docker login -u snahammed -p xxxx'
 
                     services.each { service ->
                         dir(service) {
