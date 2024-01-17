@@ -7,30 +7,46 @@ pipeline {
     }
 
     tools {
+        // Use 'maven' instead of 'Maven-3.2.5'
         maven 'Maven-3.2.5'
     }
 
     stages {
         stage('Build') {
             steps {
-                sh 'rm -rf aitouristguide-backend'
-                sh 'git clone https://github.com/snahammed506/aitouristguide-backend.git && cd aitouristguide-backend'
+                script {
+                    // Use the 'dir' step to change directory
+                    dir('workspace') {
+                        // Clean and clone in the workspace directory
+                        sh 'rm -rf aitouristguide-backend'
+                        sh 'git clone https://github.com/snahammed506/aitouristguide-backend.git'
+                        sh 'cd aitouristguide-backend'
+                    }
+                }
             }
         }
 
         stage('Deploy') {
             steps {
                 script {
-                    // Your existing deployment steps
-                    sh 'cd feedback-service && mvn clean install -DskipTests && docker build -t feedbackimage:latest . && docker push snahammed/feedbackimage:latest'
-                    sh 'cd admin-service && mvn clean install -DskipTests && docker build -t adminimage:latest . && docker push snahammed/adminimage:latest'
-                    sh 'cd place-service && mvn clean install -DskipTests && docker build -t placeimage:latest . && docker push snahammed/placeimage:latest'
-                    sh 'cd server-registery && mvn clean install -DskipTests && docker build -t serverimage:latest . && docker push snahammed/serverimage:latest'
-                    sh 'cd tourplan-service && mvn clean install -DskipTests && docker build -t tourplanimage:latest . && docker push snahammed/tourplanimage:latest'
-                    sh 'cd UserService && mvn clean install -DskipTests && docker build -t userimage:latest . && docker push snahammed/userimage:latest'
-                    sh 'docker-compose up -d'
+                    // Use a loop for repetitive steps to avoid duplication
+                    def services = ['feedback-service', 'admin-service', 'place-service', 'server-registery', 'tourplan-service', 'UserService']
+
+                    services.each { service ->
+                        dir(service) {
+                            // Clean, build, and push Docker images
+                            sh "mvn clean install -DskipTests && docker build -t ${service.toLowerCase()}image:latest . && docker push snahammed/${service.toLowerCase()}image:latest"
+                        }
+                    }
+
+                    // Use 'dir' step for docker-compose command
+                    dir('aitouristguide-backend') {
+                        // Bring up Docker containers
+                        sh 'docker-compose up -d'
+                    }
                 }
             }
         }
     }
 }
+
