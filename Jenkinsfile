@@ -25,7 +25,7 @@ pipeline {
                     sh 'cd feedback-service && mvn clean install -DskipTests && docker build -t feedbackimage:latest . && docker push snahammed/feedbackimage:latest'
                     sh 'cd admin-service && mvn clean install -DskipTests && docker build -t adminimage:latest . && docker push snahammed/adminimage:latest'
                     sh 'cd place-service && mvn clean install -DskipTests && docker build -t placeimage:latest . && docker push snahammed/placeimage:latest'
-                    sh 'cd server-registry && mvn clean install -DskipTests && docker build -t serverimage:latest . && docker push snahammed/serverimage:latest'
+                    sh 'cd server-registery && mvn clean install -DskipTests && docker build -t serverimage:latest . && docker push snahammed/serverimage:latest'
                     sh 'cd tourplan-service && mvn clean install -DskipTests && docker build -t tourplanimage:latest . && docker push snahammed/tourplanimage:latest'
                     sh 'cd UserService && mvn clean install -DskipTests && docker build -t userimage:latest . && docker push snahammed/userimage:latest'
                     sh 'docker-compose up -d'
