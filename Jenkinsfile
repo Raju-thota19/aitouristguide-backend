@@ -8,7 +8,7 @@ pipeline {
 
     tools {
         // Use 'maven' instead of 'Maven-3.2.5'
-        maven 'Maven-3.2.5'
+        maven 'maven'
     }
 
     stages {
@@ -49,4 +49,3 @@ pipeline {
         }
     }
 }
-
