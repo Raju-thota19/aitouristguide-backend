@@ -35,7 +35,7 @@ pipeline {
                     services.each { service ->
                         dir(service) {
                             // Clean, build, and push Docker images
-                            sh "mvn clean install -DskipTests && docker build -t ${service.toLowerCase()}image:latest . && docker push snahammed/${service.toLowerCase()}image:latest"
+                            sh "mvn clean install -DskipTests && docker build -t snahammed/${service.toLowerCase()}:latest . && docker push snahammed/${service.toLowerCase()}:latest"
                         }
                     }
 
